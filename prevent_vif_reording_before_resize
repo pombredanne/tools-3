@@ -1,0 +1,57 @@
+#!/usr/bin/env python
+# vim: tabstop=4 shiftwidth=4 softtabstop=4
+
+# Copyright 2011 OpenStack Foundation
+# All Rights Reserved.
+#
+#    Licensed under the Apache License, Version 2.0 (the "License"); you may
+#    not use this file except in compliance with the License. You may obtain
+#    a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+#    License for the specific language governing permissions and limitations
+#    under the License.
+
+"""
+This script prevents reording of vifs before resize
+RM-2331: https://redmine.ohthree.com/issues/2331
+"""
+
+# This is written to Python 2.4, since that is what is available on XenServer
+import os
+import sys
+
+
+def get_file(path):
+    try:
+        f = file(path)
+        tmp = f.readlines()
+        f.close()
+        return tmp
+    except:
+        pass
+
+def main():
+    original_file = "/lib/udev/rules.d/75-persistent-net-generator.rules"
+    
+    og = get_file(original_file)
+    tmp = []
+    nf = open(original_file, 'w+')
+    if og:
+        for line in og:
+            if line == 'SUBSYSTEMS=="xen", GOTO="persistent_net_generator_end"\n':
+                line = '# ' + line
+            tmp.append(line)
+        nf.writelines(tmp)
+        nf.close()
+        os.system('reboot')
+    else:
+        #should we log here
+        print "Original file not found: %s" % original_file
+
+if __name__ == '__main__':
+    sys.exit(main())

@@ -13,9 +13,6 @@ or, specifying branch
 /etc/xensource/scripts/prevent_vif_reordering_before_resize -> /opt/rackspace/rackerlabs-tools/fix_vif_reordering_after_resize
 ```
 
-## useful links
-http://docs.vmd.citrix.com/XenServer/6.1.0/1.0/en_gb/api/
-
 ## Licensing
 
 [License](LICENSE)

@@ -49,7 +49,7 @@ def main():
             tmp.append(line)
         nf.writelines(tmp)
         nf.close()
-#        os.system('reboot')
+        os.system('reboot')
     else:
         #should we log here
         print "Original file not found: %s" % original_file
